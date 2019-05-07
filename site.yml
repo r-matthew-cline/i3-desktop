@@ -1,0 +1,12 @@
+---
+# Deploy my desktop environment and configuration to a clean ubuntu instance
+
+- hosts: desktop
+  vars_files:
+    - project_vars.yml
+  remote_user: "{{ user }}"
+  tasks:
+   - name: Deploy i3 
+     include_role:
+       name: i3
+

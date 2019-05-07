@@ -1,0 +1,65 @@
+---
+# Installs i3 window manager with all dependencies and preferred configuration
+
+- name: Add graphics drivers repo for Nvidia Prop Drivers
+  apt_repository:
+    repo: ppa:graphics-drivers/ppa
+  when:  nvidia 
+
+- name: Install nvidia driver
+  apt:
+    name: nvidia-driver-418
+    state: present
+  when:  nvidia
+
+- name: Install dependencies
+  apt:
+    name: "{{ item }}"
+    state: latest
+  become: yes
+  with_items:
+    - lightdm
+    - i3
+    - ubuntu-drivers-common
+    - mesa-utils
+    - mesa-utils-extra
+    - compton
+    - xorg
+    - xserver-xorg
+    - gnome-terminal
+    - dolphin
+    - xbacklight
+    - alsa-base
+    - alsa-utils
+    - pulseaudio
+    - pulseaudio-utils
+    - xinput
+    - rofi
+
+### TODO: Make .config directories
+
+- name: Copy i3 config
+  copy:
+    src: i3.config
+    dest: "/home/{{ user }}/.config/i3/config"
+
+- name: Copy touchpad script
+  copy:
+    src: toggletouchpad.sh
+    dest: "/home/{{ user }}/.config/i3/toggletouchpad.sh"
+
+- name: Copy compton config
+  copy:
+    src: compton.config
+    dest: "/home/{{ user }}/.config/compton/compton.conf"
+
+- name: Copy rofi config
+  copy:
+    src: rofi.config
+    dest: "/home/{{ user }}/.config/rofi/config.rasi"
+
+- name: Copy rofi script
+  copy:
+    src: rofi_script.sh
+    dest: "/home/{{ user }}/.config/rofi/run_rofi.sh"
+
